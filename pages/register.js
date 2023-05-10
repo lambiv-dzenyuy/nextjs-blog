@@ -8,7 +8,7 @@ export default function Register() {
   function saveUserInfo() {
     window.localStorage.setItem(
       "user",
-      JSON.stringify({ username: name, email: email })
+      JSON.stringify({  email: email , password : password })
     );
   }
 
