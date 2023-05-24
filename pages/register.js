@@ -1,5 +1,5 @@
 import { useState } from "react";
-import styles from "../styles/Register.module.css";
+import styles from "../styles/RegisterAndLogin.module.css";
 
 export default function Register() {
   const [password, setPassword] = useState("");
