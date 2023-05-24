@@ -1,11 +1,23 @@
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import * as crypto from "crypto";
 import styles from "../styles/RegisterAndLogin.module.css";
 
 export default function Login() {
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    setToken(window.localStorage.getItem("token"));
+  }, []);
+
+  function clearToken() {
+    window.localStorage.setItem("token", "");
+    console.log(token);
+    router.reload();
+  }
 
   function validateUser(event) {
     event.preventDefault();
@@ -13,36 +25,55 @@ export default function Login() {
 
     const checkUserInputDataWithLocalStorageUserData =
       user.email === email && user.password === password;
-    window.alert("status " + checkUserInputDataWithLocalStorageUserData);
+
+    if (checkUserInputDataWithLocalStorageUserData) {
+      const token = crypto.createHash("sha256").update(password).digest("hex");
+      window.localStorage.setItem("token", token);
+      router.reload();
+    } else window.alert("Email or password is incorrect");
   }
 
-  return (
-    <div className={styles.main_container}>
-      <div className={styles.form_container}>
-        <div className={styles.form_header}>Login</div>
-        <form onSubmit={validateUser}>
-          <div className={styles.fields_container} style={{ gap: "16px" }}>
-            <input
-              type="email"
-              value={email}
-              className={styles.form_field}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
-            />
-            <input
-              type="password"
-              value={password}
-              className={styles.form_field}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-            />
-
-            <button type="submit" className={styles.btn_submit}>
-              Login
-            </button>
-          </div>
-        </form>
+  if (token.length) {
+    return (
+      <div className={styles.main_container}>
+        <button
+          onClick={clearToken}
+          style={{
+            padding: "16px",
+          }}
+        >
+          Logout
+        </button>
       </div>
-    </div>
-  );
+    );
+  } else
+    return (
+      <div className={styles.main_container}>
+        <div className={styles.form_container}>
+          <div className={styles.form_header}>Login</div>
+          <form onSubmit={validateUser}>
+            <div className={styles.fields_container} style={{ gap: "16px" }}>
+              <input
+                type="email"
+                value={email}
+                className={styles.form_field}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email"
+              />
+              <input
+                type="password"
+                value={password}
+                className={styles.form_field}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+              />
+
+              <button type="submit" className={styles.btn_submit}>
+                Login
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
 }
