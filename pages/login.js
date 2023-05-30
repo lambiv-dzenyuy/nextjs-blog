@@ -10,7 +10,9 @@ export default function Login() {
   const [token, setToken] = useState("");
 
   useEffect(() => {
-    setToken(window.localStorage.getItem("token"));
+    const tokenInStorage = window.localStorage.getItem("token")
+    if(tokenInStorage != null)
+      setToken(tokenInStorage);
   }, []);
 
   function clearToken() {
@@ -33,7 +35,7 @@ export default function Login() {
     } else window.alert("Email or password is incorrect");
   }
 
-  if (token.length) {
+  if (token.length()) {
     return (
       <div className={styles.main_container}>
         <button
