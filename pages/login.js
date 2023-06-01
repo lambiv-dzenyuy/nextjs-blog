@@ -4,10 +4,8 @@ import * as crypto from "crypto";
 import styles from "../styles/RegisterAndLogin.module.css";
 
 export default function Login() {
-  const router = useRouter();
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [token, setToken] = useState("");
   const [isLogin, setIsLogin] = useState(false);
 
   useEffect(() => {
@@ -24,8 +22,12 @@ export default function Login() {
     event.preventDefault();
     const user = JSON.parse(window.localStorage.getItem("user"));
 
+    const hashedPassword = crypto
+      .createHash("sha256")
+      .update(password)
+      .digest("hex");
     const checkUserInputDataWithLocalStorageUserData =
-      user.email === email && user.password === password;
+      user.email === email && user.password === hashedPassword;
 
     if (checkUserInputDataWithLocalStorageUserData) {
       const token = crypto.createHash("sha256").update(password).digest("hex");

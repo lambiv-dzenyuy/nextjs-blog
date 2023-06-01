@@ -1,4 +1,5 @@
 import { useState } from "react";
+import * as crypto from "crypto";
 import styles from "../styles/RegisterAndLogin.module.css";
 
 export default function Register() {
@@ -6,9 +7,10 @@ export default function Register() {
   const [email, setEmail] = useState("");
 
   function saveUserInfo() {
+    const hashedPassword = crypto.createHash("sha256").update(password).digest("hex");
     window.localStorage.setItem(
       "user",
-      JSON.stringify({  email: email , password : password })
+      JSON.stringify({  email: email , password : hashedPassword })
     );
   }
 
