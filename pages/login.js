@@ -8,17 +8,16 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [token, setToken] = useState("");
+  const [isLogin, setIsLogin] = useState(false);
 
   useEffect(() => {
-    const tokenInStorage = window.localStorage.getItem("token")
-    if(tokenInStorage != null)
-      setToken(tokenInStorage);
+    const tokenInStorage = window.localStorage.getItem("token");
+    if (tokenInStorage != null) setToken(tokenInStorage);
   }, []);
 
   function clearToken() {
     window.localStorage.setItem("token", "");
-    console.log(token);
-    router.reload();
+    setIsLogin(false);
   }
 
   function validateUser(event) {
@@ -31,11 +30,11 @@ export default function Login() {
     if (checkUserInputDataWithLocalStorageUserData) {
       const token = crypto.createHash("sha256").update(password).digest("hex");
       window.localStorage.setItem("token", token);
-      router.reload();
+      setIsLogin(true);
     } else window.alert("Email or password is incorrect");
   }
 
-  if (token.length()) {
+  if (isLogin) {
     return (
       <div className={styles.main_container}>
         <button
