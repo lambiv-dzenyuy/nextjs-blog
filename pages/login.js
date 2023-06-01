@@ -8,11 +8,6 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [isLogin, setIsLogin] = useState(false);
 
-  useEffect(() => {
-    const tokenInStorage = window.localStorage.getItem("token");
-    if (tokenInStorage != null) setToken(tokenInStorage);
-  }, []);
-
   function clearToken() {
     window.localStorage.setItem("token", "");
     setIsLogin(false);
